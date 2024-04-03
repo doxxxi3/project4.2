@@ -25,6 +25,16 @@
     <!-- <hr> -->
     <div class="line"></div>
 
+    <div class="all-posts">
+      <% posts.forEach( (post) => { %>
+        <div class="post">
+          <a href="/article/<%=post._id%>">
+            <p class="post-text"><%= post.file %></p>
+            <p class="post-text"><%= post.title %></p>
+            <p class="post-text"><%= post.summary %></p>
+            <span class="date"> <%= post.date %></span>
+    </div>
+    <% }) %>
 
 
     <div class="line"></div>

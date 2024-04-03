@@ -21,7 +21,43 @@ app.use(urlencodedParser);
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  res.render("index.ejs", {});
+  let query = {};
+  let sortQuery = { timestamp: -1 };
+
+  database
+    .find(query)
+    .sort(sortQuery)
+    .exec((err, data) => {
+      res.render("index.ejs", { posts: data });
+    });
+});
+
+app.post("/upload", upload.single("file"), (req, res) => {
+  //in the section take the data from request and save it to the database
+  console.log(req.body);
+  let currDate = new Date();
+
+  let data = {
+    title: req.body.title,
+    summary: req.body.summary,
+    date: currDate.toLocaleString(),
+    timestamp: currDate.getTime(),
+  };
+
+  database.insert(data, (err, newData) => {
+    console.log(newData);
+    res.redirect("/");
+  });
+});
+
+app.get("/article/:id", (req, res) => {
+  let id = req.params.id;
+
+  let query = { _id: id };
+
+  database.findOne(query, (err, individualPost) => {
+    res.render("articles.ejs", { post: individualPost });
+  });
 });
 
 app.get("/submit", (req, res) => {
